@@ -231,13 +231,14 @@ void generateDFA(DFA *dfa, char *path)
     int foundFinals = 0;
     while (iterate < dfa->sizeStates || (foundInit == 0 && sizeFinalStates != foundFinals))
     {
-        //
+        // compare strings looking for the initial state and update it when is found
         if (strcmp(dfa->states[iterate].state, initialState) == 0)
         {
             dfa->states[iterate].initial = 1;
             foundInit = 1;
         }
 
+        // iterates through final states array looking for the final state and update them when are foundF
         for (int i = 0; i < sizeFinalStates; i++)
         {
             if (strcmp(dfa->states[iterate].state, finalStates[i]) == 0)
@@ -248,5 +249,6 @@ void generateDFA(DFA *dfa, char *path)
         }
         iterate++;
     }
+
     fclose(entry);
 }
