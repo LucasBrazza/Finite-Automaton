@@ -35,6 +35,7 @@ typedef struct
 void generateDFA(DFA *dfa, char *path)
 {
 
+    puts(path);
     FILE *entry = fopen(path, "r");
     if (entry == NULL)
     {
@@ -152,22 +153,31 @@ void generateDFA(DFA *dfa, char *path)
         auxChar = getc(entry);
         while (auxChar != '\n')
         {
+            printf("%d", aux);
+
             // there will be 3 words, when one word is identfied the end of the string is
             // indicated after the last position (indexAux+1), the string is than copied
             // to its dfa position, the line read is emptied and the word index is reset
             if (auxChar == ' ')
             {
-                readLine[fileIndex + 1] = '\0';
-
+                readLine[fileIndex] = '\0';
                 if (aux == 0)
+                {
                     strcpy(dfa->transitions[iterate].origin, readLine);
-
+                    printf("\na");
+                }
                 if (aux == 1)
+                {
+                    printf("\nb");
                     strcpy(dfa->transitions[iterate].transition, readLine);
-
+                }
                 if (aux == 2)
+                {
+                    printf("\nc");
+                    puts(readLine);
                     strcpy(dfa->transitions[iterate].destiny, readLine);
-
+                }
+                auxChar = getc(entry);
                 strcpy(readLine, ""); // clears string
                 fileIndex = 0;
                 aux++;
@@ -251,4 +261,13 @@ void generateDFA(DFA *dfa, char *path)
     }
 
     fclose(entry);
+}
+
+int main()
+{
+    DFA dfa1;
+
+    generateDFA(&dfa1, "../test.txt");
+
+    return 0;
 }
