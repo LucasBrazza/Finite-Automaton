@@ -5,9 +5,9 @@ impar
 0
 1
 4
-par 0 par
+par 0 impar
 par 1 impar
-impar 1 impar
+impar 1 par
 impar 0 par
 par
 1
