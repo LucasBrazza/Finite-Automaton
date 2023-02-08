@@ -32,10 +32,8 @@ typedef struct
     Transition *transitions;
 } DFA;
 
-int generateDFA(DFA *dfa, char *path)
+void generateDFA(DFA *dfa, char *path)
 {
-
-    puts(path);
     FILE *entry = fopen(path, "r");
     if (entry == NULL)
     {
@@ -44,7 +42,7 @@ int generateDFA(DFA *dfa, char *path)
     }
 
     // variables for reading file
-    char readLine[70] = "\0";
+    char readLine[70] = "                                                                      ";
     int lineIndex = 0;
 
     // read the first parameter (number of states)
@@ -68,8 +66,8 @@ int generateDFA(DFA *dfa, char *path)
     int iterate;
     for (iterate = 0; iterate < dfa->sizeStates; iterate++)
     {
-        lineIndex = 0;        // reset index
-        strcpy(readLine, ""); // clears string
+        lineIndex = 0;                                                                              // reset index
+        strcpy(readLine, "                                                                      "); // clears string
 
         // reads line
         auxChar = getc(entry);
@@ -81,13 +79,14 @@ int generateDFA(DFA *dfa, char *path)
 
         readLine[lineIndex] = '\0'; // indicate end of string to strcpy function
         strcpy(dfa->states[iterate].state, readLine);
+
         dfa->states[iterate].initial = 0;
         dfa->states[iterate].final = 0;
     }
 
     // read the seconf parameter (number of elements in alphabet)
-    lineIndex = 0;        // reset index
-    strcpy(readLine, ""); // clears string
+    lineIndex = 0;                                                                              // reset index
+    strcpy(readLine, "                                                                      "); // clears string
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -107,8 +106,8 @@ int generateDFA(DFA *dfa, char *path)
     // saves all alphabet elements of dfa
     for (iterate = 0; iterate < dfa->sizeAlphabet; iterate++)
     {
-        lineIndex = 0;        // reset index
-        strcpy(readLine, ""); // clears string
+        lineIndex = 0;                                                                              // reset index
+        strcpy(readLine, "                                                                      "); // clears string
 
         // reads line
         auxChar = getc(entry);
@@ -123,8 +122,8 @@ int generateDFA(DFA *dfa, char *path)
     }
 
     // read the third parameter (number of transitions)
-    lineIndex = 0;        // reset index
-    strcpy(readLine, ""); // clears string
+    lineIndex = 0;                                                                              // reset index
+    strcpy(readLine, "                                                                      "); // clears string
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -144,20 +143,23 @@ int generateDFA(DFA *dfa, char *path)
     // saves all transitions of dfa
     int aux;
     auxChar = getc(entry);
-
+    printf("\n\n\n=====================\n\n\n");
     for (iterate = 0; iterate < dfa->sizeTransitions; iterate++)
     {
-        strcpy(readLine, "                                                            "); // clears string
 
-        auxChar = getc(entry);
-        lineIndex = 0; // reset index
+        printf("%d-", iterate);
+
+        strcpy(readLine, "                                                                      "); // clears string
+        lineIndex = 0;                                                                              // reset index
+        if (auxChar != ' ' && auxChar != '\n')
+            readLine[lineIndex++] = auxChar;
+        else
+            lineIndex++;
 
         // reads line
         aux = 0; // variable used to count spauxChares
-
         while (auxChar != '\n')
         {
-            // printf("%d", aux);
 
             // there will be 3 words, when one word is identfied the end of the string is
             // indicated after the last position (indexAux+1), the string is than copied
@@ -165,27 +167,36 @@ int generateDFA(DFA *dfa, char *path)
             if (auxChar == ' ')
             {
                 if (aux == 0)
+                {
                     strcpy(dfa->transitions[iterate].origin, readLine);
-
+                }
                 if (aux == 1)
+                {
                     strcpy(dfa->transitions[iterate].transition, readLine);
-
+                }
                 aux++;
-                strcpy(readLine, "                                                            "); // clears string
+                strcpy(readLine, "                                                                      "); // clears string
+                lineIndex = 0;                                                                              // reset index
             }
-
-            readLine[lineIndex++] = auxChar;
             auxChar = getc(entry);
-            if (auxChar == '\n')
-            {
-                strcpy(dfa->transitions[iterate].destiny, readLine);
-            }
+            if (auxChar != ' ' && auxChar != '\n')
+                readLine[lineIndex++] = auxChar;
+            else
+                lineIndex++;
+        }
+        if (auxChar == '\n')
+        {
+            strcpy(dfa->transitions[iterate].destiny, readLine);
+            strcpy(readLine, "                                                                      "); // clears string
+            lineIndex = 0;                                                                              // reset index
+            auxChar = getc(entry);
         }
     }
+    printf("\n\n\n=====================\n\n\n");
 
     // read the fourth parameter (inicial state)
-    lineIndex = 0;        // reset index
-    strcpy(readLine, ""); // clears string
+    lineIndex = 0;                                                                              // reset index
+    strcpy(readLine, "                                                                      "); // clears string
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -199,8 +210,8 @@ int generateDFA(DFA *dfa, char *path)
     strcpy(initialState, readLine);
 
     // read the fifth parameter (number of final states)
-    lineIndex = 0;        // reset index
-    strcpy(readLine, ""); // clears string
+    lineIndex = 0;                                                                              // reset index
+    strcpy(readLine, "                                                                      "); // clears string
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -214,8 +225,8 @@ int generateDFA(DFA *dfa, char *path)
     char finalStates[sizeFinalStates][20];
     for (iterate = 0; iterate < sizeFinalStates; iterate++)
     {
-        lineIndex = 0;        // reset index
-        strcpy(readLine, ""); // clears string
+        lineIndex = 0;                                                                              // reset index
+        strcpy(readLine, "                                                                      "); // clears string
 
         // reads line
         auxChar = getc(entry);
@@ -257,7 +268,6 @@ int generateDFA(DFA *dfa, char *path)
     }
 
     fclose(entry);
-    return 0;
 }
 
 int main()
@@ -266,7 +276,19 @@ int main()
 
     generateDFA(&dfa1, "../test.txt");
 
-    puts(dfa1.transitions[3].destiny);
+    printf("\nn states %d", dfa1.sizeStates);
+    printf("\nn aplhabet %d", dfa1.sizeAlphabet);
+    printf("\nn transitions %d", dfa1.sizeTransitions);
+    printf("\nfinal: %d\n", dfa1.states[0].final);
 
+    for (int j = 0; j < 4; j++)
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            printf("%c-", dfa1.transitions[j].destiny[i]);
+        }
+        printf("\n");
+    }
+    printf("\n\nCODE ENDED\n");
     return 0;
 }
