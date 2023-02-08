@@ -143,12 +143,8 @@ void generateDFA(DFA *dfa, char *path)
     // saves all transitions of dfa
     int aux;
     auxChar = getc(entry);
-    printf("\n\n\n=====================\n\n\n");
     for (iterate = 0; iterate < dfa->sizeTransitions; iterate++)
     {
-
-        printf("%d-", iterate);
-
         strcpy(readLine, "                                                                      "); // clears string
         lineIndex = 0;                                                                              // reset index
         if (auxChar != ' ' && auxChar != '\n')
@@ -192,7 +188,6 @@ void generateDFA(DFA *dfa, char *path)
             auxChar = getc(entry);
         }
     }
-    printf("\n\n\n=====================\n\n\n");
 
     // read the fourth parameter (inicial state)
     lineIndex = 0;                                                                              // reset index
