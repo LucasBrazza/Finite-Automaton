@@ -268,37 +268,33 @@ void generateDFA(DFA *dfa, char *path)
     fclose(entry);
 }
 
-DFA copyDFA(DFA model)
+void copyDFA(DFA model, DFA *new)
 {
-    DFA new;
+    new->sizeStates = model.sizeStates;
+    new->states = (States *)malloc(new->sizeStates * sizeof(States));
 
-    new.sizeStates = model.sizeStates;
-    new.states = (States *)malloc(new.sizeStates * sizeof(States));
+    new->sizeAlphabet = model.sizeAlphabet;
+    new->alphabet = (Alphabet *)malloc(new->sizeStates * sizeof(Alphabet));
 
-    new.sizeAlphabet = model.sizeAlphabet;
-    new.alphabet = (Alphabet *)malloc(new.sizeStates * sizeof(Alphabet));
-
-    new.sizeTransitions = model.sizeTransitions;
-    new.transitions = (Transition *)malloc(new.sizeStates * sizeof(Transition));
+    new->sizeTransitions = model.sizeTransitions;
+    new->transitions = (Transition *)malloc(new->sizeStates * sizeof(Transition));
     int i;
-    for (i = 0; i < new.sizeStates; i++)
+    for (i = 0; i < new->sizeStates; i++)
     {
-        strcpy(new.states[i].state, model.states[i].state);
-        new.states[i].initial = model.states[i].initial;
-        new.states[i].final = model.states[i].final;
+        strcpy(new->states[i].state, model.states[i].state);
+        new->states[i].initial = model.states[i].initial;
+        new->states[i].final = model.states[i].final;
     }
-    for (i = 0; i < new.sizeAlphabet; i++)
+    for (i = 0; i < new->sizeAlphabet; i++)
     {
-        strcpy(new.alphabet[i].element, model.alphabet[i].element);
+        strcpy(new->alphabet[i].element, model.alphabet[i].element);
     }
-    for (i = 0; i < new.sizeTransitions; i++)
+    for (i = 0; i < new->sizeTransitions; i++)
     {
-        strcpy(new.transitions[i].origin, model.transitions[i].origin);
-        strcpy(new.transitions[i].destiny, model.transitions[i].destiny);
-        strcpy(new.transitions[i].transition, model.transitions[i].transition);
+        strcpy(new->transitions[i].origin, model.transitions[i].origin);
+        strcpy(new->transitions[i].destiny, model.transitions[i].destiny);
+        strcpy(new->transitions[i].transition, model.transitions[i].transition);
     }
-
-    return new;
 }
 
 void complementDFA(DFA *dfa)
@@ -354,13 +350,65 @@ void printDFA(DFA dfa1)
     }
 }
 
+void dfaToFile(DFA dfa, char *relativePath)
+{
+    FILE *file = fopen(relativePath, "w");
+    char aux[50];
+    itoa(dfa.sizeStates, aux, 10);
+    fputs(strcat(aux, "\n"), file);
+    int i;
 
+    for (i = 0; i < dfa.sizeStates; i++)
+        fputs(strcat(dfa.states[i].state, "\n"), file);
+
+    itoa(dfa.sizeAlphabet, aux, 10);
+    fputs(strcat(aux, "\n"), file);
+
+    for (i = 0; i < dfa.sizeAlphabet; i++)
+        fputs(strcat(dfa.alphabet[i].element, "\n"), file);
+
+    itoa(dfa.sizeTransitions, aux, 10);
+    fputs(strcat(aux, "\n"), file);
+
+    for (i = 0; i < dfa.sizeTransitions; i++)
+    {
+        fputs(strcat(dfa.transitions[i].origin, " "), file);
+        fputs(strcat(dfa.transitions[i].transition, " "), file);
+        fputs(strcat(dfa.transitions[i].destiny, "\n"), file);
+    }
+
+    int foundInit = 0;
+    i = 0;
+    while (i < dfa.sizeStates || foundInit == 0)
+    {
+        // compare strings looking for the initial state and update it when is found
+        if (dfa.states[i].initial == 1)
+        {
+            fputs(dfa.states[i].state, file);
+            foundInit = 1;
+        }
+        i++;
+    }
+
+    itoa(dfa.sizeFinals, aux, 10);
+    fputs(strcat(aux, "\n"), file);
+
+    for (i = 0; i < dfa.sizeStates; i++)
+    {
+        if (dfa.states[i].final == 1)
+            fputs(strcat(dfa.states[i].state, "\n"), file);
+    }
+
+    fclose(file);
+}
 
 int main()
 {
     DFA dfa1;
 
     generateDFA(&dfa1, "../test.txt");
+
+    dfaToFile(dfa1, "../test-complemente.txt");
 
     freeDFA(dfa1);
 
