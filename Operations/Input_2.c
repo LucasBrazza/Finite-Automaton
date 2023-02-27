@@ -27,6 +27,7 @@ typedef struct
     int sizeStates;
     int sizeAlphabet;
     int sizeTransitions;
+    int sizeFinals;
     States *states;
     Alphabet *alphabet;
     Transition *transitions;
@@ -215,12 +216,12 @@ void generateDFA(DFA *dfa, char *path)
         readLine[lineIndex++] = auxChar;
         auxChar = getc(entry);
     }
-    readLine[lineIndex] = '\0';           // indicate end of string to atoi function
-    int sizeFinalStates = atoi(readLine); // convert string to int
+    readLine[lineIndex] = '\0';       // indicate end of string to atoi function
+    dfa->sizeFinals = atoi(readLine); // convert string to int
 
     // creates a array with all the final states
-    char finalStates[sizeFinalStates][20];
-    for (iterate = 0; iterate < sizeFinalStates; iterate++)
+    char finalStates[dfa->sizeFinals][20];
+    for (iterate = 0; iterate < dfa->sizeFinals; iterate++)
     {
         lineIndex = 0;                                                                              // reset index
         strcpy(readLine, "                                                                      "); // clears string
@@ -243,7 +244,7 @@ void generateDFA(DFA *dfa, char *path)
     iterate = 0;
     int foundInit = 0;
     int foundFinals = 0;
-    while (iterate < dfa->sizeStates || (foundInit == 0 && sizeFinalStates != foundFinals))
+    while (iterate < dfa->sizeStates || (foundInit == 0 && dfa->sizeFinals != foundFinals))
     {
         // compare strings looking for the initial state and update it when is found
         if (strcmp(dfa->states[iterate].state, initialState) == 0)
@@ -253,7 +254,7 @@ void generateDFA(DFA *dfa, char *path)
         }
 
         // iterates through final states array looking for the final state and update them when are foundF
-        for (int i = 0; i < sizeFinalStates; i++)
+        for (int i = 0; i < dfa->sizeFinals; i++)
         {
             if (strcmp(dfa->states[iterate].state, finalStates[i]) == 0)
             {
@@ -266,7 +267,6 @@ void generateDFA(DFA *dfa, char *path)
 
     fclose(entry);
 }
-
 
 DFA copyDFA(DFA model)
 {
@@ -301,16 +301,16 @@ DFA copyDFA(DFA model)
     return new;
 }
 
-
-void complementDFA(DFA *dfa){
-    for(int i=0 ; i< dfa->sizeStates ; i++){
-        if(dfa->states[i].final == 0)
+void complementDFA(DFA *dfa)
+{
+    for (int i = 0; i < dfa->sizeStates; i++)
+    {
+        if (dfa->states[i].final == 0)
             dfa->states[i].final = 1;
-        else if(dfa->states[i].final == 1)
+        else if (dfa->states[i].final == 1)
             dfa->states[i].final = 0;
     }
 }
-
 
 void freeDFA(DFA dfa)
 {
@@ -318,7 +318,6 @@ void freeDFA(DFA dfa)
     free(dfa.transitions);
     free(dfa.alphabet);
 }
-
 
 void printWord(char *word)
 {
@@ -331,7 +330,6 @@ void printWord(char *word)
         aux = word[++i];
     }
 }
-
 
 void printDFA(DFA dfa1)
 {
@@ -357,18 +355,14 @@ void printDFA(DFA dfa1)
 }
 
 
+
 int main()
 {
-    DFA dfa1, dfa2;
+    DFA dfa1;
 
     generateDFA(&dfa1, "../test.txt");
-    dfa2 = copyDFA(dfa1);
-    complementDFA(&dfa2);
-    printDFA(dfa2);
-    printf("\n\nCODE ENDED\n");
 
     freeDFA(dfa1);
-    freeDFA(dfa2);
 
     return 0;
 }
