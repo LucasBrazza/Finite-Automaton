@@ -267,6 +267,39 @@ void generateDFA(DFA *dfa, char *path)
     fclose(entry);
 }
 
+DFA copyDFA(DFA model)
+{
+    DFA new;
+
+    new.sizeStates = model.sizeStates;
+    new.states = (States *)malloc(new.sizeStates * sizeof(States));
+
+    new.sizeAlphabet = model.sizeAlphabet;
+    new.alphabet = (Alphabet *)malloc(new.sizeStates * sizeof(Alphabet));
+
+    new.sizeTransitions = model.sizeTransitions;
+    new.transitions = (Transition *)malloc(new.sizeStates * sizeof(Transition));
+    int i;
+    for (i = 0; i < new.sizeStates; i++)
+    {
+        strcpy(new.states[i].state, model.states[i].state);
+        new.states[i].initial = model.states[i].initial;
+        new.states[i].final = model.states[i].final;
+    }
+    for (i = 0; i < new.sizeAlphabet; i++)
+    {
+        strcpy(new.alphabet[i].element, model.alphabet[i].element);
+    }
+    for (i = 0; i < new.sizeTransitions; i++)
+    {
+        strcpy(new.transitions[i].origin, model.transitions[i].origin);
+        strcpy(new.transitions[i].destiny, model.transitions[i].destiny);
+        strcpy(new.transitions[i].transition, model.transitions[i].transition);
+    }
+
+    return new;
+}
+
 void freeDFA(DFA dfa)
 {
     free(dfa.states);
@@ -313,13 +346,15 @@ void printDFA(DFA dfa1)
 
 int main()
 {
-    DFA dfa1;
+    DFA dfa1, dfa2;
 
     generateDFA(&dfa1, "../test.txt");
-    printDFA(dfa1);
+    dfa2 = copyDFA(dfa1);
+    printDFA(dfa2);
     printf("\n\nCODE ENDED\n");
 
-    freeDFa(dfa1);
+    freeDFA(dfa1);
+    freeDFA(dfa2);
 
     return 0;
 }
