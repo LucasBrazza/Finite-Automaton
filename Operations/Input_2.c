@@ -267,6 +267,14 @@ void generateDFA(DFA *dfa, char *path)
     fclose(entry);
 }
 
+void freeDFA(DFA dfa)
+{
+    free(dfa.states);
+    free(dfa.transitions);
+    free(dfa.alphabet);
+}
+
+
 void printWord(char *word)
 {
     printf("\n");
@@ -310,6 +318,8 @@ int main()
     generateDFA(&dfa1, "../test.txt");
     printDFA(dfa1);
     printf("\n\nCODE ENDED\n");
+
+    freeDFa(dfa1);
 
     return 0;
 }
