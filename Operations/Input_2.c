@@ -267,6 +267,7 @@ void generateDFA(DFA *dfa, char *path)
     fclose(entry);
 }
 
+
 DFA copyDFA(DFA model)
 {
     DFA new;
@@ -300,6 +301,17 @@ DFA copyDFA(DFA model)
     return new;
 }
 
+
+void complementDFA(DFA *dfa){
+    for(int i=0 ; i< dfa->sizeStates ; i++){
+        if(dfa->states[i].final == 0)
+            dfa->states[i].final = 1;
+        else if(dfa->states[i].final == 1)
+            dfa->states[i].final = 0;
+    }
+}
+
+
 void freeDFA(DFA dfa)
 {
     free(dfa.states);
@@ -319,6 +331,7 @@ void printWord(char *word)
         aux = word[++i];
     }
 }
+
 
 void printDFA(DFA dfa1)
 {
@@ -350,6 +363,7 @@ int main()
 
     generateDFA(&dfa1, "../test.txt");
     dfa2 = copyDFA(dfa1);
+    complementDFA(&dfa2);
     printDFA(dfa2);
     printf("\n\nCODE ENDED\n");
 
