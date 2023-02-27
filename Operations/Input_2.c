@@ -279,31 +279,37 @@ void printWord(char *word)
     }
 }
 
-int main()
+void printDFA(DFA dfa1)
 {
-    DFA dfa1;
-
-    generateDFA(&dfa1, "../test.txt");
-
     printf("\nn states %d", dfa1.sizeStates);
     for (int i = 0; i < dfa1.sizeStates; i++)
     {
         printWord(dfa1.states[i].state);
         printf(" - initial %d - final %d", dfa1.states[i].initial, dfa1.states[i].final);
     }
-    printf("\nn aplhabet %d\n", dfa1.sizeAlphabet);
+    printf("\nn alphabet %d\n", dfa1.sizeAlphabet);
     for (int i = 0; i < dfa1.sizeAlphabet; i++)
     {
-        puts(dfa1.alphabet[i].element);
+        printWord(dfa1.alphabet[i].element);
     }
-    printf("n transitions %d", dfa1.sizeTransitions);
-    for (int j = 0; j < dfa1.sizeTransitions ; j++)
+    printf("\nn transitions %d", dfa1.sizeTransitions);
+    for (int j = 0; j < dfa1.sizeTransitions; j++)
     {
         printf("\n");
-        puts(dfa1.transitions[j].origin);
-        puts(dfa1.transitions[j].transition);
-        puts(dfa1.transitions[j].destiny);
+        printWord(dfa1.transitions[j].origin);
+        printWord(dfa1.transitions[j].transition);
+        printWord(dfa1.transitions[j].destiny);
     }
+}
+
+
+int main()
+{
+    DFA dfa1;
+
+    generateDFA(&dfa1, "../test.txt");
+    printDFA(dfa1);
     printf("\n\nCODE ENDED\n");
+
     return 0;
 }
