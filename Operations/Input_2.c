@@ -31,9 +31,10 @@ typedef struct
     States *states;
     Alphabet *alphabet;
     Transition *transitions;
+    //State *initial;
 } DFA;
 
-void generateDFA(DFA *dfa, char *path)
+void generateDFA(DFA *dfa, char *path /*, char *initial*/)
 {
     FILE *entry = fopen(path, "r");
     if (entry == NULL)
@@ -206,6 +207,8 @@ void generateDFA(DFA *dfa, char *path)
     // creates a varable with the initial state
     char initialState[lineIndex];
     strcpy(initialState, readLine);
+    //strcpy(initial, readLine);
+
 
     // read the fifth parameter (number of final states)
     lineIndex = 0;                                                                              // reset index
@@ -400,6 +403,28 @@ void dfaToFile(DFA dfa, char *relativePath)
     }
 
     fclose(file);
+}
+
+void productDFA(char dfa1[100], char dfa2[100], char operation){
+    DFA result;
+    char *initDFA1, *initDFA2;
+    
+
+
+    transitions = (Transition *)malloc(dfa->sizeTransitions * sizeof(Transition));
+    
+    result.state = (States*) malloc(sizeof(States));
+    //para pegar o estado inicial devemos verificar na posição do arquivo correta
+    
+
+    //alocar state
+    // definir estado inicial 
+    // iterar entre transições 
+    // definir estados equivalentes
+    // um estado equivalente consitem em um mesmo estado de origem que leva a um estado final
+    // estados equivalentes tem uma mesma origem com mesma transição
+    // ter um array auxiliar de strings para armazenar os multiplos estados 
+
 }
 
 int main()
