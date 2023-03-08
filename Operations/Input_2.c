@@ -210,18 +210,16 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
     saveTransitions(dfa, entry, auxChar, iterate, lineIndex, readLine);
 
     // read the fourth parameter (inicial state)
+    fseek(entry, seekParam(dfa, path, 7), SEEK_SET);
     lineIndex = 0;                                                                              // reset index
     strcpy(readLine, "                                                                      "); // clears string
+    auxChar = getc(entry);
     while (auxChar != '\n')
     {
         readLine[lineIndex++] = auxChar;
         auxChar = getc(entry);
     }
     readLine[lineIndex] = '\0'; // indicate end of string to strcpy function
-
-    // creates a varable with the initial state
-    char initialState[lineIndex];
-    strcpy(initialState, readLine);
 
     strcpy(dfa->initialState.state, readLine);
     dfa->initialState.initial = 1;
@@ -235,9 +233,8 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
         readLine[lineIndex++] = auxChar;
         auxChar = getc(entry);
     }
-    readLine[lineIndex] = '\0';       // indicate end of string to atoi function
+    readLine[lineIndex] = '\0';
     dfa->sizeFinals = atoi(readLine); // convert string to int
-
     // creates a array with all the final states
     char finalStates[dfa->sizeFinals][20];
     for (iterate = 0; iterate < dfa->sizeFinals; iterate++)
@@ -247,8 +244,9 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
 
         // reads line
         auxChar = getc(entry);
-        while (auxChar != '\n')
+        while (auxChar != EOF)
         {
+            printf("%c", auxChar);
             readLine[lineIndex++] = auxChar;
             auxChar = getc(entry);
         }
@@ -266,7 +264,7 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
     while (iterate < dfa->sizeStates || (foundInit == 0 && dfa->sizeFinals != foundFinals))
     {
         // compare strings looking for the initial state and update it when is found
-        if (strcmp(dfa->states[iterate].state, initialState) == 0)
+        if (strcmp(dfa->states[iterate].state, dfa->initialState.state) == 0)
         {
             dfa->states[iterate].initial = 1;
             foundInit = 1;
@@ -466,18 +464,7 @@ void dfaToFile(DFA dfa, char *relativePath)
         fputs(strcat(dfa.transitions[i].destiny, "\n"), file);
     }
 
-    int foundInit = 0;
-    i = 0;
-    while (i < dfa.sizeStates || foundInit == 0)
-    {
-        // compare strings looking for the initial state and update it when is found
-        if (dfa.states[i].initial == 1)
-        {
-            fputs(dfa.states[i].state, file);
-            foundInit = 1;
-        }
-        i++;
-    }
+    fputs(strcat(dfa.initialState.state, "\n"), file);
 
     itoa(dfa.sizeFinals, aux, 10);
     fputs(strcat(aux, "\n"), file);
@@ -491,94 +478,98 @@ void dfaToFile(DFA dfa, char *relativePath)
     fclose(file);
 }
 
-DFA productDFA(DFA *dfa1, DFA *dfa2, char operation)
+void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
 {
     // fazer verificações para ver se o produto é possivel
-
-    DFA product;
-    product.sizeStates = dfa1->sizeStates * dfa2->sizeStates;
-    product.sizeFinals = 0;
-    product.states = (States *)malloc(product.sizeStates * sizeof(States));
+    product->sizeStates = dfa1->sizeStates * dfa2->sizeStates;
+    product->sizeFinals = 0;
+    product->states = (States *)malloc(product->sizeStates * sizeof(States));
 
     int i, j, counter = 0;
     for (i = 0; i < dfa1->sizeStates; i++)
     {
         for (j = 0; j < dfa2->sizeStates; j++)
         {
-            strcpy(product.states[counter].state, dfa1->states[i].state);
-            strcpy(product.states[counter].state, ",");
-            strcpy(product.states[counter].state, dfa2->states[j].state);
+            strcpy(product->states[counter].state, dfa1->states[i].state);
+            strcat(product->states[counter].state, ",");
+            strcat(product->states[counter].state, dfa2->states[j].state);
+            product->states[counter].initial = 0;
 
-            if (operation == "u")
+            if (operation == 'u')
             {
-                if (dfa1->states[i].final == 1 || dfa2->states[i].final == 1)
+                if (dfa1->states[i].final == 1 || dfa2->states[j].final == 1)
                 {
-                    product.states[counter].final = 1;
-                    product.sizeFinals++;
+                    product->states[counter].final = 1;
+                    product->sizeFinals++;
                 }
                 else
-                    product.states[counter].final = 0;
+                    product->states[counter].final = 0;
             }
 
-            if (operation == "i")
+            if (operation == 'i')
             {
-                if (dfa1->states[i].final == 1 && dfa2->states[i].final == 1)
+                if (dfa1->states[i].final == 1 && dfa2->states[j].final == 1)
                 {
-                    product.states[counter].final = 1;
-                    product.sizeFinals++;
+                    product->states[counter].final = 1;
+                    product->sizeFinals++;
                 }
                 else
-                    product.states[counter].final = 0;
+                    product->states[counter].final = 0;
             }
 
             if (dfa1->states[i].initial == 1 && dfa2->states[j].initial == 1)
             {
-                strcpy(product.initialState.state, product.states[counter].state);
-                product.initialState.initial = 1;
-                product.initialState.final = product.states[counter].final;
+                strcpy(product->initialState.state, product->states[counter].state);
+                product->initialState.initial = 1;
+                product->initialState.final = product->states[counter].final;
+                product->states[counter].initial = 1;
             }
             counter++;
         }
     }
 
-    product.sizeAlphabet = dfa1->sizeAlphabet;
-    product.alphabet = (Alphabet *)malloc(product.sizeAlphabet * sizeof(Alphabet));
-    for (i = 0; i < product.sizeAlphabet; i++)
-        strcpy(product.alphabet->element, dfa1->alphabet->element);
+    product->sizeAlphabet = dfa1->sizeAlphabet;
+    product->alphabet = (Alphabet *)malloc(product->sizeAlphabet * sizeof(Alphabet));
+    printWord(dfa1->alphabet[1].element);
+    for (i = 0; i < product->sizeAlphabet; i++)
+        strcpy(product->alphabet[i].element, dfa1->alphabet[i].element);
 
     counter = 0;
-    product.transitions = (Transition *)malloc(sizeof(Transition));
+    product->sizeTransitions = product->sizeStates * product->sizeAlphabet;
+    product->transitions = (Transition *)malloc(product->sizeStates * product->sizeAlphabet * sizeof(Transition));
     for (i = 0; i < dfa1->sizeTransitions; i++)
     {
         for (j = 0; j < dfa2->sizeTransitions; j++)
         {
+            printf("a");
+
             if (strcmp(dfa1->transitions[i].transition, dfa2->transitions[j].transition) == 0)
             {
-                product.transitions = (Transition *)realloc(product.transitions, sizeof(Transition));
+                strcpy(product->transitions[counter].origin, dfa1->transitions[i].origin);
+                strcat(product->transitions[counter].origin, ",");
+                strcat(product->transitions[counter].origin, dfa2->transitions[j].origin);
 
-                strcpy(product.transitions[counter].origin, dfa1->transitions[i].origin);
-                strcpy(product.transitions[counter].origin, ",");
-                strcpy(product.transitions[counter].transition, dfa2->transitions[j].origin);
+                strcpy(product->transitions[counter].transition, dfa1->transitions[i].transition);
 
-                strcpy(product.transitions[counter].transition, dfa1->transitions[i].transition);
-
-                strcpy(product.transitions[counter].destiny, dfa1->transitions[i].destiny);
-                strcpy(product.transitions[counter].destiny, ",");
-                strcpy(product.transitions[counter].destiny, dfa2->transitions[j].destiny);
+                strcpy(product->transitions[counter].destiny, dfa1->transitions[i].destiny);
+                strcat(product->transitions[counter].destiny, ",");
+                strcat(product->transitions[counter].destiny, dfa2->transitions[j].destiny);
                 counter++;
             }
         }
     }
-
-    product.sizeTransitions = counter;
 }
 
 int main()
 {
-    DFA dfa1;
+    DFA dfa1, dfa2, dfa3;
 
-    generateDFA(&dfa1, "../test.txt");
-    printDFA(dfa1);
+    generateDFA(&dfa1, "../a1.txt");
+    generateDFA(&dfa2, "../a2.txt");
+
+    productDFA(&dfa1, &dfa2, &dfa3, 'i');
+    // printDFA(dfa3);
+    dfaToFile(dfa3, "../convertToFile.txt");
 
     // dfaToFile(dfa1, "../test-complemente.txt");
 
@@ -586,6 +577,8 @@ int main()
 
     // fclose(f);
     freeDFA(dfa1);
+    freeDFA(dfa2);
+    freeDFA(dfa3);
 
     return 0;
 }
