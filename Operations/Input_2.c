@@ -34,13 +34,17 @@ typedef struct
     States initialState;
 } DFA;
 
+void clearString(char *str)
+{
+    strcpy(str, "                                                                     "); // clears string
+}
+
 void saveStates(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
 {
     for (iterate = 0; iterate < dfa->sizeStates; iterate++)
     {
-        lineIndex = 0;                                                                              // reset index
-        strcpy(readLine, "                                                                      "); // clears string
-
+        lineIndex = 0; // reset index
+        clearString(readLine);
         // reads line
         auxChar = getc(entry);
         while (auxChar != '\n')
@@ -62,9 +66,8 @@ void saveAlphabet(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineInde
     // saves all alphabet elements of dfa
     for (iterate = 0; iterate < dfa->sizeAlphabet; iterate++)
     {
-        lineIndex = 0;                                                                              // reset index
-        strcpy(readLine, "                                                                      "); // clears string
-
+        lineIndex = 0; // reset index
+        clearString(readLine);
         // reads line
         auxChar = getc(entry);
         while (auxChar != '\n')
@@ -84,8 +87,8 @@ void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineI
     auxChar = getc(entry);
     for (iterate = 0; iterate < dfa->sizeTransitions; iterate++)
     {
-        strcpy(readLine, "                                                                      "); // clears string
-        lineIndex = 0;                                                                              // reset index
+        clearString(readLine);
+        lineIndex = 0; // reset index
         // if (auxChar != ' ' && auxChar != '\n')
         //     readLine[lineIndex] = auxChar;
         // lineIndex++;
@@ -111,8 +114,8 @@ void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineI
                     strcpy(dfa->transitions[iterate].transition, readLine);
                 }
                 aux++;
-                strcpy(readLine, "                                                                      "); // clears string
-                lineIndex = 0;                                                                              // reset index
+                clearString(readLine);
+                lineIndex = 0; // reset index
             }
             if (auxChar != ' ' && auxChar != '\n')
             {
@@ -125,8 +128,8 @@ void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineI
         {
             readLine[lineIndex++] = '\0';
             strcpy(dfa->transitions[iterate].destiny, readLine);
-            strcpy(readLine, "                                                                      "); // clears string
-            lineIndex = 0;                                                                              // reset index
+            clearString(readLine);
+            lineIndex = 0; // reset index
             auxChar = getc(entry);
         }
     }
@@ -167,8 +170,8 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
     saveStates(dfa, entry, auxChar, iterate, lineIndex, readLine);
 
     // read the second parameter (number of elements in alphabet)
-    lineIndex = 0;                                                                              // reset index
-    strcpy(readLine, "                                                                      "); // clears string
+    lineIndex = 0; // reset index
+    clearString(readLine);
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -188,8 +191,8 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
     saveAlphabet(dfa, entry, auxChar, iterate, lineIndex, readLine);
 
     // read the third parameter (number of transitions)
-    lineIndex = 0;                                                                              // reset index
-    strcpy(readLine, "                                                                      "); // clears string
+    lineIndex = 0; // reset index
+    clearString(readLine);
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -211,8 +214,8 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
 
     // read the fourth parameter (inicial state)
     fseek(entry, seekParam(dfa, path, 7), SEEK_SET);
-    lineIndex = 0;                                                                              // reset index
-    strcpy(readLine, "                                                                      "); // clears string
+    lineIndex = 0; // reset index
+    clearString(readLine);
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -225,8 +228,8 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
     dfa->initialState.initial = 1;
 
     // read the fifth parameter (number of final states)
-    lineIndex = 0;                                                                              // reset index
-    strcpy(readLine, "                                                                      "); // clears string
+    lineIndex = 0; // reset index
+    clearString(readLine);
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
@@ -239,14 +242,12 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
     char finalStates[dfa->sizeFinals][20];
     for (iterate = 0; iterate < dfa->sizeFinals; iterate++)
     {
-        lineIndex = 0;                                                                              // reset index
-        strcpy(readLine, "                                                                      "); // clears string
-
+        lineIndex = 0; // reset index
+        clearString(readLine);
         // reads line
         auxChar = getc(entry);
         while (auxChar != EOF)
         {
-            printf("%c", auxChar);
             readLine[lineIndex++] = auxChar;
             auxChar = getc(entry);
         }
@@ -397,7 +398,7 @@ void complementDFA(DFA *dfa)
 
 void freeDFA(DFA dfa)
 {
-    free(dfa.states->state);
+    free(dfa.states);
     free(dfa.transitions);
     free(dfa.alphabet);
 }
@@ -541,8 +542,6 @@ void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
     {
         for (j = 0; j < dfa2->sizeTransitions; j++)
         {
-            printf("a");
-
             if (strcmp(dfa1->transitions[i].transition, dfa2->transitions[j].transition) == 0)
             {
                 strcpy(product->transitions[counter].origin, dfa1->transitions[i].origin);
