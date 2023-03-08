@@ -472,7 +472,7 @@ void dfaToFile(DFA dfa, char *relativePath)
     for (i = 0; i < dfa.sizeStates; i++)
     {
         if (dfa.states[i].final == 1)
-            fputs(strcat(dfa.states[i].state, "\n"), file);
+            fputs(dfa.states[i].state, file);
     }
 
     fclose(file);
@@ -567,7 +567,7 @@ int main()
     generateDFA(&dfa1, "../a1.txt");
     generateDFA(&dfa2, "../a2.txt");
 
-    productDFA(&dfa1, &dfa2, &dfa3, 'i');
+    productDFA(&dfa1, &dfa2, &dfa3, 'u');
     // printDFA(dfa3);
     dfaToFile(dfa3, "../convertToFile.txt");
 
