@@ -491,6 +491,87 @@ void dfaToFile(DFA dfa, char *relativePath)
     fclose(file);
 }
 
+DFA productDFA(DFA *dfa1, DFA *dfa2, char operation)
+{
+    // fazer verificações para ver se o produto é possivel
+
+    DFA product;
+    product.sizeStates = dfa1->sizeStates * dfa2->sizeStates;
+    product.sizeFinals = 0;
+    product.states = (States *)malloc(product.sizeStates * sizeof(States));
+
+    int i, j, counter = 0;
+    for (i = 0; i < dfa1->sizeStates; i++)
+    {
+        for (j = 0; j < dfa2->sizeStates; j++)
+        {
+            strcpy(product.states[counter].state, dfa1->states[i].state);
+            strcpy(product.states[counter].state, ",");
+            strcpy(product.states[counter].state, dfa2->states[j].state);
+
+            if (operation == "u")
+            {
+                if (dfa1->states[i].final == 1 || dfa2->states[i].final == 1)
+                {
+                    product.states[counter].final = 1;
+                    product.sizeFinals++;
+                }
+                else
+                    product.states[counter].final = 0;
+            }
+
+            if (operation == "i")
+            {
+                if (dfa1->states[i].final == 1 && dfa2->states[i].final == 1)
+                {
+                    product.states[counter].final = 1;
+                    product.sizeFinals++;
+                }
+                else
+                    product.states[counter].final = 0;
+            }
+
+            if (dfa1->states[i].initial == 1 && dfa2->states[j].initial == 1)
+            {
+                strcpy(product.initialState.state, product.states[counter].state);
+                product.initialState.initial = 1;
+                product.initialState.final = product.states[counter].final;
+            }
+            counter++;
+        }
+    }
+
+    product.sizeAlphabet = dfa1->sizeAlphabet;
+    product.alphabet = (Alphabet *)malloc(product.sizeAlphabet * sizeof(Alphabet));
+    for (i = 0; i < product.sizeAlphabet; i++)
+        strcpy(product.alphabet->element, dfa1->alphabet->element);
+
+    counter = 0;
+    product.transitions = (Transition *)malloc(sizeof(Transition));
+    for (i = 0; i < dfa1->sizeTransitions; i++)
+    {
+        for (j = 0; j < dfa2->sizeTransitions; j++)
+        {
+            if (strcmp(dfa1->transitions[i].transition, dfa2->transitions[j].transition) == 0)
+            {
+                product.transitions = (Transition *)realloc(product.transitions, sizeof(Transition));
+
+                strcpy(product.transitions[counter].origin, dfa1->transitions[i].origin);
+                strcpy(product.transitions[counter].origin, ",");
+                strcpy(product.transitions[counter].transition, dfa2->transitions[j].origin);
+
+                strcpy(product.transitions[counter].transition, dfa1->transitions[i].transition);
+
+                strcpy(product.transitions[counter].destiny, dfa1->transitions[i].destiny);
+                strcpy(product.transitions[counter].destiny, ",");
+                strcpy(product.transitions[counter].destiny, dfa2->transitions[j].destiny);
+                counter++;
+            }
+        }
+    }
+
+    product.sizeTransitions = counter;
+}
 
 int main()
 {
