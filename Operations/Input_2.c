@@ -239,20 +239,20 @@ void generateDFA(DFA *dfa, char *path /*, char *initial*/)
     readLine[lineIndex] = '\0';
     dfa->sizeFinals = atoi(readLine); // convert string to int
     // creates a array with all the final states
-    char finalStates[dfa->sizeFinals][20];
+    char **finalStates = (char **)malloc(dfa->sizeFinals * sizeof(char *));
     for (iterate = 0; iterate < dfa->sizeFinals; iterate++)
     {
         lineIndex = 0; // reset index
         clearString(readLine);
         // reads line
         auxChar = getc(entry);
-        while (auxChar != EOF)
+        while (auxChar != EOF && auxChar != '\n')
         {
             readLine[lineIndex++] = auxChar;
             auxChar = getc(entry);
         }
-
         readLine[lineIndex] = '\0'; // indicate end of string to strcpy function
+        finalStates[iterate] = malloc(stringSize * sizeof(char));
         strcpy(finalStates[iterate], readLine);
     }
 
@@ -559,25 +559,71 @@ void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
     }
 }
 
+char *finalsToString(DFA dfa)
+{
+    char *str;
+    str = (char *)malloc(dfa.sizeFinals * stringSize * sizeof(char));
+    strcpy(str, "");
+    int index = 0;
+    for (int i = 0; i < dfa.sizeStates; i++)
+    {
+        printf("%s - %d - %d\n", dfa.states[i].state, dfa.states[i].final, dfa.sizeFinals);
+        if (dfa.states[i].final == 1)
+        {
+            strcat(str, dfa.states[i].state);
+            strcat(str, " ");
+        }
+    }
+    return str;
+}
+
+void dfaToDOT(char *name, DFA dfa)
+{
+    char *str = finalsToString(dfa);
+    FILE *file = fopen(name, "wt");
+
+    fprintf(file, "digraph finite_state_machine {\n\trankdir=LR;\n\tsize=\"10\"\n\n"
+                  "\tnode [shape = doublecircle]; %s;",
+            str);
+
+    fprintf(file, "\n\tnode [shape = point]; qi;\n");
+
+    fprintf(file, "\n\tnode [shape = circle]");
+
+    fprintf(file, "\n\tqi -> %s;", dfa.initialState.state);
+
+    for (int i = 0; i < dfa.sizeTransitions; i++)
+        fprintf(file, "\n\t%s -> %s [label = %s ];", dfa.transitions[i].origin, dfa.transitions[i].destiny, dfa.transitions[i].transition);
+    fprintf(file, "\n\t}");
+
+    free(str);
+    fclose(file);
+}
+
 int main()
 {
-    DFA dfa1, dfa2, dfa3;
+    DFA dfa1, dfa2, dfa3, dfa4;
 
-    generateDFA(&dfa1, "../a1.txt");
-    generateDFA(&dfa2, "../a2.txt");
+    // generateDFA(&dfa1, "../a1.txt");
+    // generateDFA(&dfa2, "../a2.txt");
+    generateDFA(&dfa4, "../a1.txt");
 
-    productDFA(&dfa1, &dfa2, &dfa3, 'u');
-    // printDFA(dfa3);
-    dfaToFile(dfa3, "../convertToFile.txt");
 
-    // dfaToFile(dfa1, "../test-complemente.txt");
+    // productDFA(&dfa1, &dfa2, &dfa3, 'u');
+    //  printDFA(dfa4);
+    //   finalsToString(dfa3);
+
+    // printf("%d",dfa4.states[1].initial);
+    dfaToDOT("./test.dot", dfa4);
+    //  dfaToFile(dfa1, "../test-complemente.txt");
 
     // FILE *f = fopen("../test.txt", "r");
 
     // fclose(f);
-    freeDFA(dfa1);
-    freeDFA(dfa2);
-    freeDFA(dfa3);
+    // freeDFA(dfa1);
+    // freeDFA(dfa2);
+    // freeDFA(dfa3);
+    freeDFA(dfa4);
 
     return 0;
 }
