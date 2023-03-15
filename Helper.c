@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "Helper.h"
 
@@ -75,9 +76,20 @@ int seekLine(int line, char *path)
 // Free DFA memory
 void freeDFA(DFA *dfa)
 {
-    free(dfa->states);
-    free(dfa->transitions);
-    free(dfa->alphabet);
+    free(dfa->states->final);
+    free(dfa->states->initial);
+    free(dfa->states->state);
+    free(dfa->transitions->destiny);
+    free(dfa->transitions->origin);
+    free(dfa->transitions->transition);
+    free(dfa->alphabet->element);
+    free(dfa->initialState.final);
+    free(dfa->initialState.initial);
+    free(dfa->initialState.state);
+    free(dfa->sizeAlphabet);
+    free(dfa->sizeFinals);
+    free(dfa->sizeStates);
+    free(dfa->sizeTransitions);
 }
 
 // Prints a word
