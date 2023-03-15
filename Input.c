@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "Operations.h"
+#include "Input.h"
 
 
 void clearString(char *str)

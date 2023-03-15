@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include "Operations.h"
+
 
 void complementDFA(DFA *dfa)
 {

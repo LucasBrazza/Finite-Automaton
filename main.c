@@ -1,4 +1,8 @@
 #include "Operations.h"
+#include "Converter.c"
+#include "Helper.c"
+#include "Input.c"
+#include "DFA.h"
 
 int main()
 {
@@ -19,10 +23,10 @@ int main()
     // FILE *f = fopen("../test.txt", "r");
 
     // fclose(f);
-    freeDFA(dfa1);
-    freeDFA(dfa2);
-    freeDFA(dfa3);
-    freeDFA(dfa4);
+    freeDFA(&dfa1);
+    freeDFA(&dfa2);
+    freeDFA(&dfa3);
+    freeDFA(&dfa4);
 
     return 0;
 }

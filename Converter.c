@@ -1,7 +1,27 @@
-#include "Operations.h"
+#include <stdio.h>
+#include "Converter.h"
+
+char *finalsToString(DFA *dfa)
+{
+    char *str;
+    str = (char *)malloc(dfa->sizeFinals * stringSize * sizeof(char));
+    strcpy(str, "");
+    int index = 0;
+    for (int i = 0; i < dfa->sizeStates; i++)
+    {
+        printf("%s - %d - %d\n", dfa->states[i].state, dfa->states[i].final, dfa->sizeFinals);
+        if (dfa->states[i].final == 1)
+        {
+            strcat(str, dfa->states[i].state);
+            strcat(str, " ");
+        }
+    }
+    return str;
+}
+
 
 // Creates the corresponding .dot file for a DFA
-void dfaToDOT(char *path, struct DFA *dfa)
+void dfaToDOT(char *path, DFA *dfa)
 {
     char *str = finalsToString(dfa);
     FILE *file = fopen(path, "wt");
@@ -24,23 +44,6 @@ void dfaToDOT(char *path, struct DFA *dfa)
     fclose(file);
 }
 
-char *finalsToString(DFA *dfa)
-{
-    char *str;
-    str = (char *)malloc(dfa->sizeFinals * stringSize * sizeof(char));
-    strcpy(str, "");
-    int index = 0;
-    for (int i = 0; i < dfa->sizeStates; i++)
-    {
-        printf("%s - %d - %d\n", dfa->states[i].state, dfa->states[i].final, dfa->sizeFinals);
-        if (dfa->states[i].final == 1)
-        {
-            strcat(str, dfa->states[i].state);
-            strcat(str, " ");
-        }
-    }
-    return str;
-}
 
 void dfaToFile(DFA *dfa, char *relativePath)
 {
