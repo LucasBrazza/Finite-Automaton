@@ -34,4 +34,4 @@ typedef struct
     States initialState;
 } DFA;
 
-#endif  DFA_H
+#endif
