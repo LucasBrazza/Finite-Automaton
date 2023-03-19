@@ -11,7 +11,7 @@ int main()
 
     // generateDFA(&dfa1, "../a1.txt");
     // generateDFA(&dfa2, "../a2.txt");
-    generateDFA(&dfa4, "a1.txt");
+    generateDFA(&dfa4, "test.txt");
 
     // productDFA(&dfa1, &dfa2, &dfa3, 'u');
     printDFA(&dfa4);

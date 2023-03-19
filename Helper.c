@@ -3,7 +3,6 @@
 #include <string.h>
 #include "Helper.h"
 
-
 // Seek in the file for the line that contains the desired parameter and returns the corresponding integer
 // 1 - number of states
 // 2 - states
@@ -76,9 +75,10 @@ int seekLine(int line, char *path)
 // Free DFA memory
 void freeDFA(DFA *dfa)
 {
+
+    free(dfa->states->state);
     free(dfa->states->final);
     free(dfa->states->initial);
-    free(dfa->states->state);
     free(dfa->transitions->destiny);
     free(dfa->transitions->origin);
     free(dfa->transitions->transition);

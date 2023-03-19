@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "Operations.h"
 
-
 void complementDFA(DFA *dfa)
 {
     for (int i = 0; i < dfa->sizeStates; i++)
@@ -17,8 +16,8 @@ void complementDFA(DFA *dfa)
 void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
 {
     product->sizeStates = dfa1->sizeStates * dfa2->sizeStates;
-    product->sizeFinals = 0;
     product->states = (States *)malloc(product->sizeStates * sizeof(States));
+    product->sizeFinals = 0;
 
     int i, j, counter = 0;
     for (i = 0; i < dfa1->sizeStates; i++)
@@ -65,7 +64,6 @@ void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
 
     product->sizeAlphabet = dfa1->sizeAlphabet;
     product->alphabet = (Alphabet *)malloc(product->sizeAlphabet * sizeof(Alphabet));
-    printWord(dfa1->alphabet[1].element);
     for (i = 0; i < product->sizeAlphabet; i++)
         strcpy(product->alphabet[i].element, dfa1->alphabet[i].element);
 

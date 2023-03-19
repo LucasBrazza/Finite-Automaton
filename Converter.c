@@ -11,7 +11,6 @@ char *finalsToString(DFA *dfa)
     int index = 0;
     for (int i = 0; i < dfa->sizeStates; i++)
     {
-        printf("%s - %d - %d\n", dfa->states[i].state, dfa->states[i].final, dfa->sizeFinals);
         if (dfa->states[i].final == 1)
         {
             strcat(str, dfa->states[i].state);
@@ -40,7 +39,7 @@ void dfaToDOT(char *path, DFA *dfa)
 
     for (int i = 0; i < dfa->sizeTransitions; i++)
         fprintf(file, "\n\t%s -> %s [label = %s ];", dfa->transitions[i].origin, dfa->transitions[i].destiny, dfa->transitions[i].transition);
-    fprintf(file, "\n\t}");
+        fprintf(file, "\n\t}");
 
     free(str);
     fclose(file);

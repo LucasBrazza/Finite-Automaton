@@ -94,6 +94,7 @@ void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineI
             }
             auxChar = getc(entry);
         }
+        //saves destiny
         if (auxChar == '\n')
         {
             readLine[lineIndex++] = '\0';
@@ -194,6 +195,7 @@ void generateDFA(DFA *dfa, char *path)
 
     strcpy(dfa->initialState.state, readLine);
     dfa->initialState.initial = 1;
+    // atualizar o elemento em states
 
     // read the fifth parameter (number of final states)
     lineIndex = 0; // reset index
