@@ -3,7 +3,6 @@
 #include <string.h>
 #include "Input.h"
 
-
 void clearString(char *str)
 {
     strcpy(str, ""); // clears string
@@ -94,7 +93,7 @@ void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineI
             }
             auxChar = getc(entry);
         }
-        //saves destiny
+        // saves destiny
         if (auxChar == '\n')
         {
             readLine[lineIndex++] = '\0';
@@ -185,19 +184,22 @@ void generateDFA(DFA *dfa, char *path)
     fseek(entry, seekParam(dfa, path, 7), SEEK_SET);
     lineIndex = 0; // reset index
     clearString(readLine);
+
     auxChar = getc(entry);
     while (auxChar != '\n')
     {
         readLine[lineIndex++] = auxChar;
         auxChar = getc(entry);
+        if (auxChar == ' ')
+            break;
     }
     readLine[lineIndex] = '\0'; // indicate end of string to strcpy function
-
     strcpy(dfa->initialState.state, readLine);
     dfa->initialState.initial = 1;
     // atualizar o elemento em states
 
     // read the fifth parameter (number of final states)
+    fseek(entry, seekParam(dfa, path, 8), SEEK_SET);
     lineIndex = 0; // reset index
     clearString(readLine);
     auxChar = getc(entry);
@@ -208,8 +210,12 @@ void generateDFA(DFA *dfa, char *path)
     }
     readLine[lineIndex] = '\0';
     dfa->sizeFinals = atoi(readLine); // convert string to int
+    clearString(readLine);
+
     // creates a array with all the final states
     char **finalStates = (char **)malloc(dfa->sizeFinals * sizeof(char *));
+    fseek(entry, seekParam(dfa, path, 9), SEEK_SET);
+
     for (iterate = 0; iterate < dfa->sizeFinals; iterate++)
     {
         lineIndex = 0; // reset index
@@ -221,8 +227,11 @@ void generateDFA(DFA *dfa, char *path)
             readLine[lineIndex++] = auxChar;
             auxChar = getc(entry);
         }
+
         readLine[lineIndex] = '\0'; // indicate end of string to strcpy function
-        finalStates[iterate] = malloc(stringSize * sizeof(char));
+        printWord(readLine);
+
+        finalStates[iterate] = malloc((1 + stringSize) * sizeof(char));
         strcpy(finalStates[iterate], readLine);
     }
 
@@ -255,6 +264,5 @@ void generateDFA(DFA *dfa, char *path)
         }
         iterate++;
     }
-
     fclose(entry);
 }
