@@ -9,6 +9,27 @@ void clearString(char *str)
     strcpy(str, ""); // clears string
 }
 
+//Entry: 
+int seekSize(FILE *entry, DFA *dfa, char *path, int linePosition, char *readLine) {
+    // read the fourth parameter (inicial state)
+    fseek(entry, seekParam(dfa, path, linePosition), SEEK_SET);
+    int lineIndex = 0; // reset index
+    char auxChar; 
+    clearString(readLine);
+    auxChar = getc(entry);
+    
+    while (auxChar != '\n')
+    {
+        readLine[lineIndex++] = auxChar;
+        auxChar = getc(entry);
+        if (auxChar == ' ')
+            break;
+    }
+    readLine[lineIndex] = '\0'; // indicate end of string to strcpy function
+
+    return atoi(readLine);
+}
+
 // Entry: DFA, file, auxiliar char, iterate, line index, read line
 // The method saves the states in DFA in a file
 void saveStates(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
@@ -128,15 +149,10 @@ void generateDFA(DFA *dfa, char *path)
     int lineIndex = 0;
     int iterate;
 
+    char auxChar = '0';
+    
     // read the first parameter (number of states)
-    char auxChar = getc(entry);
-    while (auxChar != '\n')
-    {
-        readLine[lineIndex++] = auxChar;
-        auxChar = getc(entry);
-    }
-    readLine[lineIndex] = '\0';       // indicate end of string to atoi function
-    dfa->sizeStates = atoi(readLine); // convert string to int
+    dfa->sizeStates = seekSize(entry, dfa, path, 1, readLine); // convert string to int
 
     // alocate numer of states of the dfa
     dfa->states = (States *)malloc(dfa->sizeStates * sizeof(States));
@@ -146,17 +162,8 @@ void generateDFA(DFA *dfa, char *path)
     // saves all states of dfa
     saveStates(dfa, entry, auxChar, iterate, lineIndex, readLine);
 
-    // read the second parameter (number of elements in alphabet)
-    lineIndex = 0; // reset index
-    clearString(readLine);
-    auxChar = getc(entry);
-    while (auxChar != '\n')
-    {
-        readLine[lineIndex++] = auxChar;
-        auxChar = getc(entry);
-    }
-    readLine[lineIndex] = '\0';         // indicate end of string to atoi function
-    dfa->sizeAlphabet = atoi(readLine); // convert string to int
+    // read the third parameter (number of elements in alphabet)
+    dfa->sizeAlphabet = seekSize(entry,dfa, path, 3, readLine); // convert string to int
 
     // alocate alphabet size of the dfa
     dfa->alphabet = (Alphabet *)malloc(dfa->sizeAlphabet * sizeof(Alphabet));
@@ -167,17 +174,8 @@ void generateDFA(DFA *dfa, char *path)
 
     saveAlphabet(dfa, entry, auxChar, iterate, lineIndex, readLine);
 
-    // read the third parameter (number of transitions)
-    lineIndex = 0; // reset index
-    clearString(readLine);
-    auxChar = getc(entry);
-    while (auxChar != '\n')
-    {
-        readLine[lineIndex++] = auxChar;
-        auxChar = getc(entry);
-    }
-    readLine[lineIndex] = '\0';            // indicate end of string to atoi function
-    dfa->sizeTransitions = atoi(readLine); // convert string to int
+    // read the fifth parameter (number of transitions)
+    dfa->sizeTransitions = seekSize(entry,dfa, path, 5, readLine); // convert string to int
 
     // alocate number of transitions of the dfa
     dfa->transitions = (Transition *)malloc(dfa->sizeTransitions * sizeof(Transition));
@@ -207,18 +205,8 @@ void generateDFA(DFA *dfa, char *path)
     dfa->initialState.initial = 1;
     // atualizar o elemento em states
 
-    // read the fifth parameter (number of final states)
-    fseek(entry, seekParam(dfa, path, 8), SEEK_SET);
-    lineIndex = 0; // reset index
-    clearString(readLine);
-    auxChar = getc(entry);
-    while (auxChar != '\n')
-    {
-        readLine[lineIndex++] = auxChar;
-        auxChar = getc(entry);
-    }
-    readLine[lineIndex] = '\0';
-    dfa->sizeFinals = atoi(readLine); // convert string to int
+    // read the eighth parameter (number of final states)
+    dfa->sizeFinals = seekSize(entry,dfa, path, 8, readLine); // convert string to int
     clearString(readLine);
 
     // creates a array with all the final states
