@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "Operations.h"
 
-// find the complement of a DFA
 void complementDFA(DFA *dfa)
 {
     for (int i = 0; i < dfa->sizeStates; i++)
@@ -14,8 +13,6 @@ void complementDFA(DFA *dfa)
     }
 }
 
-
-// find the union or intersection of two DFAs
 void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
 {
     product->sizeStates = dfa1->sizeStates * dfa2->sizeStates;
@@ -94,7 +91,6 @@ void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
     }
 }
 
-// copy a DFA
 void copyDFA(DFA model, DFA *newDFA)
 {
     newDFA->sizeStates = model.sizeStates;

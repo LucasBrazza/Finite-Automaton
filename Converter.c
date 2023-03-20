@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include "Converter.h"
 
-
-// Converts a string to an integer
 char *finalsToString(DFA *dfa)
 {
     char *str;
@@ -48,7 +46,6 @@ void dfaToDOT(char *path, DFA *dfa)
 }
 
 
-// Creates the corresponding .txt file for a DFA
 void dfaToFile(DFA *dfa, char *relativePath)
 {
     FILE *file = fopen(relativePath, "w");

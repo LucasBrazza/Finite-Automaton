@@ -3,6 +3,6 @@
 
 #include "DFA.h"
 
-void reconWord(char *pathDFA, char *pathWords, char *pathOutput);
+void simulateDFA(char *dfaFile, char *inputFile, char *outputFile);
 
 #endif

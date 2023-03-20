@@ -3,13 +3,11 @@
 #include <string.h>
 #include "Input.h"
 
-// clears string
 void clearString(char *str)
 {
     strcpy(str, ""); // clears string
 }
 
-// saves dfa states from file
 void saveStates(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
 {
     for (iterate = 0; iterate < dfa->sizeStates; iterate++)
@@ -32,7 +30,6 @@ void saveStates(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex,
     }
 }
 
-// saves dfa alphabet from file
 void saveAlphabet(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
 {
     // saves all alphabet elements of dfa
@@ -53,7 +50,6 @@ void saveAlphabet(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineInde
     }
 }
 
-// saves dfa transitions from file
 void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
 {
     int aux;
@@ -109,7 +105,6 @@ void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineI
     }
 }
 
-// saves dfa initial state from file
 void generateDFA(DFA *dfa, char *path)
 {
     FILE *entry = fopen(path, "r");
