@@ -3,11 +3,14 @@
 #include <string.h>
 #include "Input.h"
 
+// Clears string
 void clearString(char *str)
 {
     strcpy(str, ""); // clears string
 }
 
+// Entry: DFA, file, auxiliar char, iterate, line index, read line
+// The method saves the states in DFA in a file
 void saveStates(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
 {
     for (iterate = 0; iterate < dfa->sizeStates; iterate++)
@@ -30,6 +33,8 @@ void saveStates(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex,
     }
 }
 
+// Entry: DFA, file, auxiliar char, iterate, line index, read line
+// The method saves the alphabet of DFA in a file
 void saveAlphabet(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
 {
     // saves all alphabet elements of dfa
@@ -50,6 +55,8 @@ void saveAlphabet(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineInde
     }
 }
 
+// Entry: DFA, file, auxiliar char, iterate, line index, read line
+// The method saves the transitions of DFA in a file
 void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineIndex, char *readLine)
 {
     int aux;
@@ -105,6 +112,8 @@ void saveTransitions(DFA *dfa, FILE *entry, char auxChar, int iterate, int lineI
     }
 }
 
+// Entry: DFA, path
+// The method reads a file and saves the DFA in a struct
 void generateDFA(DFA *dfa, char *path)
 {
     FILE *entry = fopen(path, "r");
