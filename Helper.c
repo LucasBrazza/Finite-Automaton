@@ -75,39 +75,21 @@ int seekLine(int line, char *path)
 // Free DFA memory
 void freeDFA(DFA *dfa)
 {
-    printf("\nFree Memory Started\n");
 
-    int i;
-
-    for (i = 0; i < dfa->sizeStates; i++)
-    {
-        printf("\n%d - Free in Progress", i);
-        free(dfa->states[i].state);
-    }
-
-    printf("\nFree in Progress");
-
-    free(dfa->states);
-
-    for (i = 0; i < dfa->sizeTransitions; i++)
-    {
-        printf("\n%d - Free in Progress", i);
-
-        free(dfa->transitions[i].destiny);
-        free(dfa->transitions[i].origin);
-        free(dfa->transitions[i].transition);
-    }
-    free(dfa->transitions);
-
+    free(dfa->states->state);
+    free(dfa->states->final);
+    free(dfa->states->initial);
+    free(dfa->transitions->destiny);
+    free(dfa->transitions->origin);
+    free(dfa->transitions->transition);
     free(dfa->alphabet->element);
-    free(dfa->alphabet);
-
     free(dfa->initialState.final);
     free(dfa->initialState.initial);
     free(dfa->initialState.state);
-
-    free(dfa);
-    printf("\nFree Memory Completed\n");
+    free(dfa->sizeAlphabet);
+    free(dfa->sizeFinals);
+    free(dfa->sizeStates);
+    free(dfa->sizeTransitions);
 }
 
 // Prints a word

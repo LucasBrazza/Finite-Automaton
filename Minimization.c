@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Minimization.h"
 
+// Minimization algorithm :c
 void minimization(DFA *dfa)
 {
     int notFinal = dfa->sizeStates - dfa->sizeFinals;

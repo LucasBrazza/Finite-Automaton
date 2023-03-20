@@ -1,7 +1,6 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include <stdio.h>
 #include "DFA.h"
 
 void clearString(char *str);
