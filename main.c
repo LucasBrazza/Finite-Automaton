@@ -1,10 +1,14 @@
 #include <stdlib.h>
+#include <string.h>
 #include "Recognize.h"
-#include "Recognize.c"
+// #include "Recognize.c"
 #include "Operations.h"
-#include "Converter.c"
-#include "Helper.c"
-#include "Input.c"
+// #include "Converter.c"
+// #include "Helper.c"
+// #include "Input.c"
+#include "Converter.h"
+#include "Helper.h"
+#include "Input.h"
 #include "DFA.h"
 
 int main(int argc, char *argv[])

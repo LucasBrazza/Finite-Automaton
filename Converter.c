@@ -50,20 +50,23 @@ void dfaToFile(DFA *dfa, char *relativePath)
 {
     FILE *file = fopen(relativePath, "w");
     char aux[50];
-    itoa(dfa->sizeStates, aux, 10);
+    // itoa(dfa->sizeStates, aux, 10);
+    sprintf(aux, "%d", dfa->sizeStates);
     fputs(strcat(aux, "\n"), file);
     int i;
 
     for (i = 0; i < dfa->sizeStates; i++)
         fputs(strcat(dfa->states[i].state, "\n"), file);
 
-    itoa(dfa->sizeAlphabet, aux, 10);
+    // itoa(dfa->sizeAlphabet, aux, 10);
+    sprintf(aux, "%d", dfa->sizeAlphabet);
     fputs(strcat(aux, "\n"), file);
 
     for (i = 0; i < dfa->sizeAlphabet; i++)
         fputs(strcat(dfa->alphabet[i].element, "\n"), file);
 
-    itoa(dfa->sizeTransitions, aux, 10);
+    // itoa(dfa->sizeTransitions, aux, 10);
+    sprintf(aux, "%d", dfa->sizeTransitions);
     fputs(strcat(aux, "\n"), file);
 
     for (i = 0; i < dfa->sizeTransitions; i++)
@@ -75,7 +78,8 @@ void dfaToFile(DFA *dfa, char *relativePath)
 
     fputs(strcat(dfa->initialState.state, "\n"), file);
 
-    itoa(dfa->sizeFinals, aux, 10);
+    // itoa(dfa->sizeFinals, aux, 10);
+    sprintf(aux, "%d", dfa->sizeFinals);
     fputs(strcat(aux, "\n"), file);
 
     for (i = 0; i < dfa->sizeStates; i++)
