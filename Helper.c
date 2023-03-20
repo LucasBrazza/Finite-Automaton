@@ -79,34 +79,36 @@ void freeDFA(DFA *dfa)
 
     int i;
 
-    for (i = 0; i < dfa->sizeStates; i++)
-    {
-        printf("\n%d - Free in Progress", i);
-        free(dfa->states[i].state);
-    }
+    // for (i = 0; i < dfa->sizeStates; i++)
+    // {
+    //     printf("\n%d - Free in Progress", i);
+    //     free(dfa->states[i].state);
+    // }
 
     printf("\nFree in Progress");
 
     free(dfa->states);
 
-    for (i = 0; i < dfa->sizeTransitions; i++)
-    {
-        printf("\n%d - Free in Progress", i);
+    // for (i = 0; i < dfa->sizeTransitions; i++)
+    // {
+    //     printf("\n%d - Free in Progress", i);
 
-        free(dfa->transitions[i].destiny);
-        free(dfa->transitions[i].origin);
-        free(dfa->transitions[i].transition);
-    }
+    //     free(dfa->transitions[i].destiny);
+    //     free(dfa->transitions[i].origin);
+    //     free(dfa->transitions[i].transition);
+    // }
     free(dfa->transitions);
 
-    free(dfa->alphabet->element);
+    // free(dfa->alphabet->element);
     free(dfa->alphabet);
 
-    free(dfa->initialState.final);
-    free(dfa->initialState.initial);
-    free(dfa->initialState.state);
+    // free(dfa->initialState.final);
+    // free(dfa->initialState.initial);
+    // char var_null[] = "NULL";
+    // strcpy(dfa->initialState.state, NULL);
+    
 
-    free(dfa);
+    // free(dfa);
     printf("\nFree Memory Completed\n");
 }
 
