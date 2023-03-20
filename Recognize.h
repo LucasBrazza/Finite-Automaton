@@ -3,6 +3,6 @@
 
 #include "DFA.h"
 
-void reconWord(char *pathDFA, char *pathWords, char *pathOutput);
+int recon(char *pathDFA, char *pathWords, char *pathOutput);
 
 #endif
