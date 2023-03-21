@@ -53,7 +53,8 @@ int seekParam(DFA *dfa, char *path, int parameter)
     return seekLine(line, path);
 }
 
-// Seek in the file the desired line and returns the corresponding integer
+// Entry: line, path
+// the function seek in the file the desired line and returns the corresponding integer 
 int seekLine(int line, char *path)
 {
     int position = 0, aux = 1;
@@ -72,7 +73,8 @@ int seekLine(int line, char *path)
     return position;
 }
 
-// Free DFA memory
+// Entry: DFA
+// The method free DFA memory
 void freeDFA(DFA *dfa)
 {
     printf("\nFree Memory Started\n");
@@ -112,7 +114,8 @@ void freeDFA(DFA *dfa)
     printf("\nFree Memory Completed\n");
 }
 
-// Prints a word
+// Entry: word
+// The method prints a word
 void printWord(char *word)
 {
     printf("\n");
@@ -125,7 +128,8 @@ void printWord(char *word)
     }
 }
 
-// Prints the DFA
+// Entry: DFA
+// The method prints the DFA
 void printDFA(DFA *dfa1)
 {
     printf("\nn states %d", dfa1->sizeStates);
