@@ -1,16 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "Operations.h"
 
 void complementDFA(DFA *dfa)
 {
+    int newSizeFinals = 0;
     for (int i = 0; i < dfa->sizeStates; i++)
     {
         if (dfa->states[i].final == 0)
+        {
             dfa->states[i].final = 1;
+            newSizeFinals = newSizeFinals + 1;
+        }
         else if (dfa->states[i].final == 1)
             dfa->states[i].final = 0;
     }
+
+    dfa->sizeFinals = newSizeFinals;
 }
 
 void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)

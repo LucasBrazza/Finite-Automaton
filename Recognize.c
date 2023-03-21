@@ -85,7 +85,7 @@ void simulateDFA(char *dfaFile, char *inputFile, char *outputFile)
     int accepted;
 
     // Lê cada palavra do arquivo de teste
-    while (fgets(word, 1000, input))
+    while (fgets(word, stringSize, input))
     {
         // Verifica se a palavra é aceita pelo DFA
         accepted = acceptsWord(word, &dfa);
