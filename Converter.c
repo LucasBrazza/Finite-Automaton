@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "Converter.h"
 
+// Entry: DFA
+// The function returns a string with all finals states of DFA
 char *finalsToString(DFA *dfa)
 {
     char *str;
@@ -21,7 +23,8 @@ char *finalsToString(DFA *dfa)
 }
 
 
-// Creates the corresponding .dot file for a DFA
+// Entry: pathof the .dot file, DFA
+// The method creates a .dot file with the DFA
 void dfaToDOT(char *path, DFA *dfa)
 {
     char *str = finalsToString(dfa);
@@ -45,7 +48,8 @@ void dfaToDOT(char *path, DFA *dfa)
     fclose(file);
 }
 
-
+// Entry: DFA, relative path of the .txt file
+// The method creates a .txt file with the DFA
 void dfaToFile(DFA *dfa, char *relativePath)
 {
     FILE *file = fopen(relativePath, "w");

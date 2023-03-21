@@ -3,6 +3,8 @@
 #include <string.h>
 #include "Operations.h"
 
+// Entry: a DFA; 
+// The method creates a new DFA changing the final states of the DFA to non-final
 void complementDFA(DFA *dfa)
 {
     int newSizeFinals = 0;
@@ -20,6 +22,9 @@ void complementDFA(DFA *dfa)
     dfa->sizeFinals = newSizeFinals;
 }
 
+// Entry: three DFAs and the operation
+// Operation: "u" for Union or "i" for intersection
+// The method creates a new DFA from the union or intersection of the two DFAs using the states and the entry operation
 void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
 {
     product->sizeStates = dfa1->sizeStates * dfa2->sizeStates;
@@ -98,6 +103,7 @@ void productDFA(DFA *dfa1, DFA *dfa2, DFA *product, char operation)
     }
 }
 
+// Copy a DFA
 void copyDFA(DFA model, DFA *newDFA)
 {
     newDFA->sizeStates = model.sizeStates;
