@@ -1,0 +1,21 @@
+4
+par,a
+par,b
+impar,a
+impar,b
+2
+0
+1
+8
+par,a 0 impar,b
+par,b 0 impar,a
+par,a 1 impar,b
+par,b 1 impar,a
+impar,a 0 par,b
+impar,b 0 par,a
+impar,a 1 par,b
+impar,b 1 par,a
+ +Mqò
+2
+impar,a
+impar,b

@@ -1,4 +1,4 @@
-2 
+2
 par
 impar
 2
